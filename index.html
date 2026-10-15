@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha Simulator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e24;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 5px; }
+        .pricing-info {
+            font-size: 1.1em;
+            color: #a0a0a0;
+            margin-bottom: 20px;
+        }
+        .stats {
+            background-color: #2b2b36;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .stats p { margin: 5px 15px; display: inline-block; font-weight: bold; }
+        .controls button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+        .controls button:hover { background-color: #45a049; transform: scale(1.05); }
+        .controls button.ten-pull { background-color: #2196F3; }
+        .controls button.ten-pull:hover { background-color: #1976D2; }
+        .controls button.reset { background-color: #f44336; padding: 10px 20px; font-size: 14px;}
+        .controls button.reset:hover { background-color: #d32f2f; }
+        
+        #results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            min-height: 150px;
+        }
+        
+        .card {
+            width: 100px;
+            height: 140px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+            animation: popIn 0.3s ease-out;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Rarity Styles */
+        .regular { background: #808080; border: 3px solid #505050; }
+        .rare { background: #800080; border: 3px solid #4a004a; }
+        .super-rare { background: #FFD700; border: 3px solid #b8860b; color: #333; text-shadow: none; }
+        .super-super-rare { 
+            background: linear-gradient(135deg, #b9f2ff 0%, #e6faff 50%, #b9f2ff 100%); 
+            border: 3px solid #5bc0de; 
+            color: #005f73;
+            text-shadow: none;
+            box-shadow: 0 0 15px #b9f2ff;
+        }
+        .ultra-rare { 
+            background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3); 
+            background-size: 1800% 1800%;
+            border: 3px solid #fff;
+            animation: rainbow 3s ease infinite, popIn 0.3s ease-out;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes rainbow { 
+            0%{background-position:0% 82%}
+            50%{background-position:100% 19%}
+            100%{background-position:0% 82%}
+        }
+
+        .inventory {
+            margin-top: 40px;
+            background-color: #2b2b36;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Gacha Simulator</h1>
+    <div class="pricing-info">
+        1 Pull = 10 Gems = <strong>RM 2.00</strong>
+    </div>
+
+    <div class="stats">
+        <p>Total Pulls: <span id="total-pulls">0</span></p>
+        <p>Gems Spent: <span id="gems-spent">0</span></p>
+        <p>Total Cost: <span id="rm-spent">RM 0.00</span></p>
+    </div>
+
+    <div class="controls">
+        <button onclick="performPull(1)">1x Pull</button>
+        <button class="ten-pull" onclick="performPull(10)">10x Pull</button>
+        <br>
+        <button class="reset" onclick="reset()">Reset Stats</button>
+    </div>
+
+    <div id="results"></div>
+
+    <div class="inventory">
+        <h3>Pull History</h3>
+        <p style="color: #808080;">Regular (60%): <span id="count-regular">0</span></p>
+        <p style="color: #da70d6;">Rare (25%): <span id="count-rare">0</span></p>
+        <p style="color: #FFD700;">Super Rare (10%): <span id="count-sr">0</span></p>
+        <p style="color: #b9f2ff;">Super Super Rare (4%): <span id="count-ssr">0</span></p>
+        <p style="color: #ff69b4;">Ultra Rare (1%): <span id="count-ur">0</span></p>
+    </div>
+
+    <script>
+        // State Variables
+        let totalPulls = 0;
+        let gemsSpent = 0;
+        let rmSpent = 0;
+        
+        let inventory = {
+            regular: 0,
+            rare: 0,
+            sr: 0,
+            ssr: 0,
+            ur: 0
+        };
+
+        // Rarity Rates (Must sum up to 100)
+        const RATES = {
+            regular: 60, // 60%
+            rare: 25,    // 25%
+            sr: 10,      // 10%
+            ssr: 4,      // 4%
+            ur: 1        // 1%
+        };
+
+        function rollGacha() {
+            let roll = Math.random() * 100;
+            
+            if (roll <= RATES.ur) return 'ur';
+            roll -= RATES.ur;
+            
+            if (roll <= RATES.ssr) return 'ssr';
+            roll -= RATES.ssr;
+            
+            if (roll <= RATES.sr) return 'sr';
+            roll -= RATES.sr;
+            
+            if (roll <= RATES.rare) return 'rare';
+            
+            return 'regular';
+        }
+
+        function getDisplayData(rarity) {
+            switch(rarity) {
+                case 'regular': return { name: 'Regular', className: 'regular' };
+                case 'rare': return { name: 'Rare', className: 'rare' };
+                case 'sr': return { name: 'Super Rare', className: 'super-rare' };
+                case 'ssr': return { name: 'SSR', className: 'super-super-rare' };
+                case 'ur': return { name: 'Ultra Rare', className: 'ultra-rare' };
+            }
+        }
+
+        function performPull(amount) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            for (let i = 0; i < amount; i++) {
+                // Roll and Update Inventory
+                const rarity = rollGacha();
+                inventory[rarity]++;
+
+                // Update Stats
+                totalPulls++;
+                gemsSpent += 10;
+                rmSpent += 2.00;
+
+                // Create Card UI
+                const displayData = getDisplayData(rarity);
+                const card = document.createElement('div');
+                card.className = `card ${displayData.className}`;
+                card.innerText = displayData.name;
+                
+                // Slight animation delay for 10-pull effect
+                card.style.animationDelay = `${i * 0.05}s`;
+                
+                resultsDiv.appendChild(card);
+            }
+
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('total-pulls').innerText = totalPulls;
+            document.getElementById('gems-spent').innerText = gemsSpent;
+            document.getElementById('rm-spent').innerText = `RM ${rmSpent.toFixed(2)}`;
+
+            document.getElementById('count-regular').innerText = inventory.regular;
+            document.getElementById('count-rare').innerText = inventory.rare;
+            document.getElementById('count-sr').innerText = inventory.sr;
+            document.getElementById('count-ssr').innerText = inventory.ssr;
+            document.getElementById('count-ur').innerText = inventory.ur;
+        }
+
+        function reset() {
+            totalPulls = 0;
+            gemsSpent = 0;
+            rmSpent = 0;
+            inventory = { regular: 0, rare: 0, sr: 0, ssr: 0, ur: 0 };
+            document.getElementById('results').innerHTML = '';
+            updateUI();
+        }
+    </script>
+</body>
+</html>
