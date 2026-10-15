@@ -1,4 +1,4 @@
-# Gacha Simulator
+# Yet another Gacha Simulator, made for self study.
 A lightweight web-based gacha pull simulator featuring tiered drop rates and realistic expenditure tracking in MYR.
 
 ## Features
@@ -7,7 +7,28 @@ A lightweight web-based gacha pull simulator featuring tiered drop rates and rea
 - **Pull Currency:** Real-time tracking of pulls, gem usage, and MYR expenses.
 - **Controls:** 1x Pull, 10x Pull, and Stat Reset.
 
+## Drop rates and rarities
+The simulator models a 5-tier drop curve inspired by commercial gacha titles (e.g., Genshin Impact):
+| Rarity Grade | Visual Style | Drop Rate | Description |
+| :--- | :--- | :---: | :--- |
+| **Regular** | Grey | 85.00% | Common standard pool items |
+| **Rare** | Purple | 10.00% | Uncommon guaranteed pool items |
+| **Super Rare (SR)** | Gold | 4.00% | High-tier standard pull |
+| **Super Super Rare (SSR)** | Diamond / Cyan | 0.80% | Featured / Elite tier |
+| **Ultra Rare (UR)** | Rainbow Animated | 0.20% | Jackpot tier |
+* note that SSR and UR is adjusted for my personal 'realistic' rarity. I may reference other games/app for those.
+
+## Currency & Pricing (MYR)
+
+Expenses are calculated in real time based on fixed draw costs:
+- **1 Pull:** 10 Gems = **RM 2.00**
+- **10x Pull:** 100 Gems = **RM 20.00**
+* Pricing is not accurate to real values atm.
+
 ## Tech Stack
 - HTML5
 - CSS3 (Custom animations & styling)
 - Vanilla JavaScript
+
+## Disclaimer
+This project has zero relation nor involvement in any titles, games, etc. mentioned. No real money is needed, and while gacha (or gambling in general) can be fun, moderation and control is a must. Spend wisely, gamble in moderation and have fun!
