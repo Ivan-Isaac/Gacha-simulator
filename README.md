@@ -1,4 +1,4 @@
-# Yet another Gacha Simulator, made for self study.
+# Yet another Gacha Simulator, made for my own self study.
 A lightweight web-based gacha pull simulator featuring tiered drop rates and realistic expenditure tracking in MYR.
 
 ## Features
@@ -31,4 +31,4 @@ Expenses are calculated in real time based on fixed draw costs:
 - Vanilla JavaScript
 
 ## Disclaimer
-This project has zero relation nor involvement in any titles, games, etc. mentioned. No real money is needed, and while gacha (or gambling in general) can be fun, moderation and control is a must. Spend wisely, gamble in moderation and have fun!
+This project has zero relation nor involvement in any titles, games, etc. mentioned. No real money is needed, and while gacha (or gambling in general) can be fun, self-control is a must. Spend wisely, gamble in moderation and have fun!
