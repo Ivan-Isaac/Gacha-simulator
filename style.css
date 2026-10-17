@@ -144,3 +144,109 @@ h1 {
     border-radius: 10px;
     display: inline-block;
 }
+
+/* Guilt Trip Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #23232c;
+    border: 2px solid #ff4757;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 420px;
+    box-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
+    animation: popIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+    color: #ff4757;
+    margin-top: 0;
+}
+
+.guilt-amount {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #ffd32a;
+}
+
+.guilt-text {
+    font-size: 1.05em;
+    line-height: 1.5;
+    color: #d2dae2;
+    margin: 20px 0;
+}
+
+#guilt-close-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#guilt-close-btn:hover {
+    background: #ff6b81;
+}
+
+/* Ultra Rare Modal Special Styles */
+.modal-content.ur-content {
+    border: 3px solid #fff;
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.4), 0 0 15px rgba(255, 105, 180, 0.6);
+    background: #181822;
+}
+
+.sparkle-header {
+    font-size: 0.9em;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ffd700;
+    margin-bottom: 5px;
+}
+
+.ur-badge {
+    display: inline-block;
+    padding: 8px 18px;
+    font-weight: 900;
+    font-size: 1.1em;
+    border-radius: 6px;
+    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3);
+    background-size: 1800% 1800%;
+    animation: rainbow 3s ease infinite;
+    color: #fff;
+    text-shadow: 1px 1px 3px black;
+    margin: 10px 0;
+}
+
+#ur-close-btn {
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 10px;
+    transition: transform 0.2s;
+}
+
+#ur-close-btn:hover {
+    transform: scale(1.05);
+}
